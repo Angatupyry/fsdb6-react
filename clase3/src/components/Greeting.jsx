@@ -1,10 +1,9 @@
 import "./Greeting.css";
 
-const Greeting = () => {
-  const text = "Hi";
+const Greeting = ({ saludo }) => {
   return (
     <>
-      <span>{text}</span>
+      <span>{saludo}</span>
     </>
   );
 };
