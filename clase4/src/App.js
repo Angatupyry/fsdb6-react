@@ -4,6 +4,7 @@ import Greeting from "./components/Greeting";
 import TaskList from "./components/TaskList";
 import Counter from "./components/Counter";
 import TreeImage from "./components/TreeImage";
+import SumaDeNumeros from "./components/SumaDeNumeros";
 import "./App.css";
 import { useState } from "react";
 
@@ -20,6 +21,7 @@ function App() {
       <Greeting />
       <TaskList />
       <Counter />
+      <SumaDeNumeros />
       <TreeImage showImage={showThings} showOrHideImage={showOrHide} />
     </div>
   );
