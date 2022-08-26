@@ -21,7 +21,7 @@ img {
 }
 
 .navbar>.nav-items>a:hover {
-    color: red;
+    color: black;
 }
 
 .navbar>.nav-items>a:hover {
@@ -35,7 +35,7 @@ img {
     bottom: 0;
     width: 0;
     height: 3px;
-    background: red;
+    background: black;
     transition: all 0.45s;
 }
 
@@ -47,14 +47,14 @@ img {
     display: none;
 }
 
-@media (max-width: 700px) {
+/* @media (max-width: 700px) {
     .navbar>.nav-items{
         position: absolute;
         top: 60px;
         display: flex;
         padding-top: 50px;
         flex-direction: column;
-        background: black;
+        background:rgb(43, 18, 156);
         left: 0;
         width: 100%;
         height: 100%;
@@ -131,4 +131,4 @@ img {
     .log {
         width: 170px;
     }
-}
+} */
