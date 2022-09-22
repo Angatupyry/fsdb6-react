@@ -1,12 +1,18 @@
-import React from "react";
-
-import "./Task.css";
-
 const Task = (props) => {
+  const { tareas } = props;
+
   return (
-    <div className="task">
-      Task {props.task.id} {props.task.title}
-    </div>
+    <>
+      <ul className="ul-lista-tarea" id="lista-tareas">
+        {tareas.map((tarea, i) => {
+          return (
+            <li className={tarea.prioridad} key={i}>
+              {tarea.titulo}
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 };
 
