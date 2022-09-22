@@ -14,6 +14,7 @@ const Home = () => {
             <NavLink to="/greeting">Greeting</NavLink>
             <NavLink to="/counter">Counter</NavLink>
             <NavLink to="/task">Task</NavLink>
+            <NavLink to="/login">Login</NavLink>
           </div>
           <div
             className={`nav-toggle ${isOpen && "open"}`}

@@ -1,95 +1,116 @@
+import { useState, useEffect } from "react";
 import Task from "./Task";
-import "./TaskList.css";
-import { useState } from "react";
+const tareasIniciales = [
+  { id: 1, titulo: "Ir al cine", prioridad: "prioridad-baja" },
+  { id: 2, titulo: "Pasear el perro", prioridad: "prioridad-alta" },
+  { id: 3, titulo: "Comprar fruta", prioridad: "prioridad-media" },
+  { id: 4, titulo: "Tomar agua", prioridad: "prioridad-alta" },
+];
 
 const TaskList = () => {
-  const tareasIniciales = [
-    {
-      id: 1,
-      title: "Tomar agua",
-    },
-    {
-      id: 2,
-      title: "Estudiar React",
-    },
-    {
-      id: 3,
-      title: "Tocar la nariz de mi mascota",
-    },
-  ];
-
-  const [tasks, setTask] = useState(tareasIniciales);
-  const [newValue, setNewValue] = useState({
-    id: "",
-    title: "",
+  const [tareas, setTareas] = useState([]);
+  const [newTask, setNewTask] = useState({
+    id: Math.floor(Math.random() * 100),
+    titulo: "",
+    prioridad: "prioridad-baja",
   });
 
-  const handleIdInputChange = (e) => {
-    setNewValue({ ...newValue, id: e.target.value });
+  const [errors, setErrors] = useState({
+    id: false,
+    titulo: false,
+  });
+
+  useEffect(() => {
+    cargarTareas();
+  }, []);
+
+  const cargarTareas = async () => {
+    try {
+      const token = localStorage.getItem("jwt");
+      const respuesta = await fetch("http://localhost:4000/tareas", {
+        headers: {
+          "auth-token": token,
+        },
+      });
+
+      if (!respuesta.ok) {
+        throw new Error("Error en el servidor");
+      }
+
+      const tareasFetch = await respuesta.json();
+
+      setTareas(tareasFetch.data);
+    } catch (error) {
+      console.log("No se pudo conectar con el backend");
+    }
   };
 
-  const handleTitleInputChange = (e) => {
-    setNewValue({ ...newValue, title: e.target.value });
+  const obtenerValorInput = (e) => {
+    setNewTask({
+      ...newTask,
+      titulo: e.target.value,
+    });
   };
 
-  /**
-   * - Controlar con un if el componente. 
-     - En addTask realizar un if id or title === empty return.
-     - Mostrar un mensaje si algún input está vacío. 
-     - Crear estado para manejar errores
-   */
-  const addTask = () => {
-    /**
-     * Setear el estado tasks
-     */
-    // 1 Declarando auxiliares
-    const nuevaTarea = { id: newValue.id, title: newValue.title };
-    const taskClone = [...tasks, nuevaTarea];
-    setTask(taskClone);
+  const obtenerValorSelect = (e) => {
+    setNewTask({
+      ...newTask,
+      prioridad: e.target.value,
+    });
+  };
 
-    // 2 Seteo directo
-    // setTask([...tasks, { id: Math.random, title: "Nueva tarea" }]);
+  const addTask = (e) => {
+    const newErrors = {};
+
+    if (!newTask.titulo) {
+      newErrors.titulo = true;
+      setErrors(newErrors);
+      e.preventDefault();
+      return;
+    }
+
+    const newTasks = [...tareas, newTask];
+
+    setTareas(newTasks);
+
+    setNewTask({ id: "", titulo: "" });
+
+    newErrors.titulo = false;
+    setErrors(newErrors);
+    e.preventDefault();
   };
 
   return (
-    <div className="taskList">
-      {/* {tasks.map((item) => (
-        <Task task={item} key={item.id} />
-      ))} */}
-      {tasks.map((item) => {
-        return (
-          <div className="task" key={item.id}>
-            Task {item.id} {item.title}
-          </div>
-        );
-      })}
-      <div className="addTaskContainer">
-        <div className="inputContainer">
-          <input
-            placeholder="id"
-            name="id"
-            value={newValue.id}
-            onChange={handleIdInputChange}
-          />
-          {!newValue.id && (
-            <span className="errorText">El id no puede ser vacío</span>
-          )}
-        </div>
-
-        <div className="inputContainer">
-          <input
-            placeholder="task"
-            name="task"
-            value={newValue.title}
-            onChange={handleTitleInputChange}
-          />
-        </div>
-
-        <button onClick={addTask} className="addTask">
-          Add task
+    <>
+      <form>
+        <input
+          id="tarea"
+          type="text"
+          name="tarea"
+          value={newTask.titulo}
+          placeholder="Descripción de la tarea"
+          onChange={obtenerValorInput}
+        />
+        <select
+          name="prioridad"
+          id="prioridad"
+          defaultValue=""
+          onChange={obtenerValorSelect}
+        >
+          <option value="" disabled>
+            Prioridad
+          </option>
+          <option value="prioridad-baja">baja</option>
+          <option value="prioridad-media">media</option>
+          <option value="prioridad-alta">alta</option>
+        </select>
+        <button onClick={addTask} id="agregar">
+          Agregar
         </button>
-      </div>
-    </div>
+      </form>
+      <Task tareas={tareas} />
+      {errors.titulo && <span>Ingrese un título</span>}
+    </>
   );
 };
 
