@@ -1,11 +1,5 @@
 import { useState, useEffect } from "react";
 import Task from "./Task";
-const tareasIniciales = [
-  { id: 1, titulo: "Ir al cine", prioridad: "prioridad-baja" },
-  { id: 2, titulo: "Pasear el perro", prioridad: "prioridad-alta" },
-  { id: 3, titulo: "Comprar fruta", prioridad: "prioridad-media" },
-  { id: 4, titulo: "Tomar agua", prioridad: "prioridad-alta" },
-];
 
 const TaskList = () => {
   const [tareas, setTareas] = useState([]);
@@ -26,7 +20,8 @@ const TaskList = () => {
 
   const cargarTareas = async () => {
     try {
-      const token = localStorage.getItem("jwt");
+      const token = localStorage.getItem("token");
+
       const respuesta = await fetch("http://localhost:4000/tareas", {
         headers: {
           "auth-token": token,
@@ -34,14 +29,14 @@ const TaskList = () => {
       });
 
       if (!respuesta.ok) {
-        throw new Error("Error en el servidor");
+        throw new Error("Ocurrió un error");
       }
 
       const tareasFetch = await respuesta.json();
 
       setTareas(tareasFetch.data);
     } catch (error) {
-      console.log("No se pudo conectar con el backend");
+      console.error(error);
     }
   };
 

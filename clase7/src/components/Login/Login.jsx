@@ -20,19 +20,17 @@ const Login = () => {
       });
 
       if (!respuesta.ok) {
-        throw new Error("Error en el servidor");
+        const error = await respuesta.json();
+        throw new Error(error.message);
       }
 
-      const respuestaJson = await respuesta.json();
-      if (!respuestaJson.success) {
-        throw new Error("No se encontró el usuario");
-      }
+      const auth = await respuesta.json();
 
-      alert("Usted es feliz :D. Beba agua");
+      alert("Usted es feliz. Beba agua :D");
 
-      localStorage.setItem("jwt", respuestaJson.token);
+      localStorage.setItem("token", auth.token);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
